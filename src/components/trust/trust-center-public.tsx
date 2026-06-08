@@ -51,7 +51,7 @@ export function TrustCenterPublic({ config }: Props) {
           "flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm text-muted-foreground",
           isDark ? "border-slate-800 bg-slate-900 text-slate-300" : "border-slate-200 bg-white/80"
         )}>
-          <span>Made by Kodus</span>
+          <span>© 2026 Zuro</span>
           <Button asChild size="sm" variant="ghost">
             <Link href="/login">Sign in to admin</Link>
           </Button>
