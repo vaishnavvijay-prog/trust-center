@@ -120,3 +120,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Auralis brand override */
+:root { --primary: oklch(0.55 0.258 284); --primary-foreground: oklch(0.985 0 0); --ring: oklch(0.55 0.258 284); --sidebar-primary: oklch(0.55 0.258 284); }
