@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -124,3 +125,5 @@
 
 /* Auralis brand override */
 :root { --primary: oklch(0.55 0.258 284); --primary-foreground: oklch(0.985 0 0); --ring: oklch(0.55 0.258 284); --sidebar-primary: oklch(0.55 0.258 284); }
+
+body { font-family: 'Figtree', ui-sans-serif, system-ui, sans-serif; }
