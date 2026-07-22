@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local editor/agent scratch
 .claude/
+
+# local rollout notes — carries generated secrets
+HANDOFF.md
