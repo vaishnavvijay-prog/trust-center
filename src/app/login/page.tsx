@@ -4,11 +4,14 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GithubSignInButton } from "@/components/auth/github-sign-in-button";
+import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = {
-  title: "Sign in | EzTrust",
-  description: "Sign in with GitHub to access the admin area.",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: `Sign in | ${getBrand().name}`,
+    description: "Sign in with GitHub to access the admin area.",
+  };
+}
 
 export default async function LoginPage() {
   const session = await auth();

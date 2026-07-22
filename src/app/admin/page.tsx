@@ -10,11 +10,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BuilderPanel } from "@/components/trust/builder-panel";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { cn } from "@/lib/utils";
+import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = {
-  title: "Admin area | EzTrust",
-  description: "Review requests and edit the trust center.",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: `Admin area | ${getBrand().name}`,
+    description: "Review requests and edit the trust center.",
+  };
+}
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short",

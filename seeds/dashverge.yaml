@@ -1,0 +1,70 @@
+# Dashverge — trust center content seed
+# Paste into https://trust.dashverge.com/admin, replace every TODO, then save.
+# Brand is set by env vars on the deployment, NOT here. See docs/SETUP.md.
+
+theme: light
+
+company:
+  name: Dashverge
+  tagline: Your whole go-to-market team, now agentic
+  description: >-
+    Dashverge is a suite of specialist AI agents that run sales and marketing
+    enablement end to end on one governed platform. This Trust Center is a single
+    place for security and procurement teams to review our certifications,
+    policies, infrastructure, and live system status.
+  website: https://dashverge.com
+  headquarters: "TODO: registered office address"
+  trustLead: "TODO: name of the security/GRC owner"
+
+hero:
+  statusMessage: "TODO: e.g. Latest SOC 2 Type II audit completed <month/year>. Remove this line if there is no audit yet."
+  lastUpdate: "TODO: YYYY-MM-DD"
+  commitments:
+    # Only list commitments that are actually true and can be evidenced.
+    - "TODO: e.g. Data encrypted in transit and at rest"
+    - "TODO: e.g. Customer data never used to train third-party models"
+
+# --- Everything below is a compliance representation. Do not guess. ---------
+
+compliance:
+  # Delete this whole section until a real certification/audit status exists.
+  # status values are free text, e.g. Certified / Compliant / Ready / In process.
+  - name: "TODO: e.g. SOC 2 Type II"
+    status: "TODO"
+    scope: "TODO"
+
+documents:
+  # access: request  -> gated behind the email request form (recommended for reports)
+  # access: public   -> needs a `url:` and is linked directly
+  - name: "TODO: e.g. Data Processing Agreement (DPA)"
+    description: "TODO: one line describing the document"
+    category: Legal
+    access: request
+    tags:
+      - GDPR
+
+infrastructure:
+  hosting: "TODO: e.g. AWS / GCP / Cloudflare"
+  dataResidency:
+    - "TODO: region"
+  encryption: "TODO: e.g. AES-256 at rest + TLS 1.3 in transit"
+  retention: "TODO"
+  backups: "TODO"
+
+contacts:
+  # TODO: confirm this inbox exists and is monitored
+  email: security@dashverge.com
+  sla: "TODO: e.g. 1 business day"
+
+faqs:
+  - question: Do you sign DPAs?
+    answer: "TODO"
+  - question: Is customer data used to train models?
+    answer: "TODO"
+
+subprocessors:
+  # Every third party that processes customer data must be listed here.
+  - name: "TODO: e.g. AWS"
+    category: "TODO: e.g. IT infrastructure"
+    location: "TODO: e.g. United States"
+    description: "TODO"

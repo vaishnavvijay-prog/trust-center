@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   config: TrustCenterConfig;
+  /** Footer credit line. Resolved server-side from BRAND_FOOTER. */
+  footer?: string;
 };
 
-export function TrustCenterPublic({ config }: Props) {
+export function TrustCenterPublic({ config, footer }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const isDark = config.theme === "dark";
@@ -51,7 +53,7 @@ export function TrustCenterPublic({ config }: Props) {
           "flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm text-muted-foreground",
           isDark ? "border-slate-800 bg-slate-900 text-slate-300" : "border-slate-200 bg-white/80"
         )}>
-          <span>© 2026 Zuro</span>
+          <span>{footer}</span>
           <Button asChild size="sm" variant="ghost">
             <Link href="/login">Sign in to admin</Link>
           </Button>

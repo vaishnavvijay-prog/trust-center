@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { TrustCenterPublic } from "@/components/trust/trust-center-public";
+import { getBrand } from "@/lib/brand";
 import { DEFAULT_TRUST_YAML, safeParseTrustCenter } from "@/lib/trust-config";
 import { getStoredTrustConfig } from "@/lib/trust-config-store";
 import { cn } from "@/lib/utils";
@@ -55,7 +56,7 @@ export default async function Home() {
             : "bg-slate-100/70 text-slate-900"
         )}
       >
-        <TrustCenterPublic config={config} />
+        <TrustCenterPublic config={config} footer={getBrand().footer} />
       </main>
     </div>
   );
