@@ -22,12 +22,32 @@ change ships to exactly one.**
 
 | Concern | Where it lives | Blast radius |
 | --- | --- | --- |
-| Page content (copy, compliance, documents, FAQs, subprocessors) | YAML in that brand's Supabase `trust_configs` row | One brand |
+| Page content (copy, compliance, documents, FAQs, subprocessors) | YAML in that brand's `trust_configs` row, in its own Postgres schema | One brand |
 | Brand colour, font, name, footer | Env vars on that brand's deploy — [`src/lib/brand.ts`](src/lib/brand.ts) | One brand |
 | Light/dark theme | `theme:` in the YAML | One brand |
 | Layout, components, auth, schema | This repo | All brands |
 
 Content never rides a deploy. Editing YAML in `/admin` is live immediately.
+
+## Where the data lives
+
+Supabase caps free accounts at **2 projects per user**, so the brands share one
+project and take a schema each rather than one project apiece:
+
+| Brand | Supabase project | Schema |
+| --- | --- | --- |
+| Auralis | `auralis-trust-center` | `public` |
+| Zuro | `trust-zuro` | `zuro` |
+| Dashverge | `trust-zuro` | `dashverge` |
+| Astridex | `trust-zuro` | `astridex` |
+
+`TRUST_DB_SCHEMA` scopes the client in [`src/lib/supabase.ts`](src/lib/supabase.ts),
+so isolation is structural — no query has to remember a per-brand filter. Only
+`service_role` is granted on each schema and RLS is on, so the publishable key
+cannot read another brand's document requests.
+
+Sharing has a bonus: free projects pause after ~7 days idle, and pooling all
+three brands' traffic keeps the one project awake.
 
 ## Setup
 

@@ -1,17 +1,28 @@
 # Standing up a trust center for a new brand
 
-One repo, one deploy per brand. Nothing here is shared between brands except the
-code — colours come from env vars, content comes from that brand's own Supabase
-project.
+One repo, one deploy per brand. Colours come from env vars; content comes from
+that brand's own Postgres schema (see step 1), so brands stay isolated whether
+they share a Supabase project or have one each.
 
 Budget ~20 minutes per brand. Steps 1–3 need a human (they create accounts,
 OAuth apps, and billable infrastructure).
 
 ---
 
-## 1. Supabase project (per brand)
+## 1. Database
 
-Create a new project, then run this in the SQL editor:
+Supabase free accounts allow **2 projects per user** (not per org), so brands
+normally share one project and take a schema each.
+
+**Adding a brand to an existing project (usual case):** run
+[`sql/brand-schema.sql`](../sql/brand-schema.sql) with the schema name changed,
+then add that schema under **Data API -> Settings -> Exposed schemas** *and*
+tick its tables under **Exposed tables**. Missing either step gives
+`PGRST106 the schema must be one of the following` at runtime. Set
+`TRUST_DB_SCHEMA=<brand>` on the deployment.
+
+**A brand with its own project:** create the project and run the SQL below in
+the SQL editor. Leave `TRUST_DB_SCHEMA` unset — it defaults to `public`.
 
 ```sql
 create table public.document_requests (
@@ -80,7 +91,8 @@ Add to the site footer's legal row:
 
 ## Adding a brand later
 
-1. New Supabase project (step 1) + GitHub OAuth app (step 2).
+1. A schema in the shared Supabase project, or a new project (step 1), plus a
+   GitHub OAuth app (step 2).
 2. New DO app off this same repo with that brand's env vars.
 3. Convert the brand colour to OKLCH and set `BRAND_PRIMARY`.
 

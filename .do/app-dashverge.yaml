@@ -7,7 +7,7 @@
 # DO dashboard (or via `doctl`) as type: SECRET. Never commit real values.
 
 name: dashverge-trust-center
-region: nyc
+region: blr1   # closest to the Supabase project (ap-south-1 Mumbai)
 
 services:
   - name: web
@@ -46,10 +46,13 @@ services:
         scope: RUN_AND_BUILD_TIME
         value: CHANGEME
 
-      # --- content store (Dashverge's own Supabase project) ---
+      # --- content store (shared Supabase project, this brand's schema) ---
       - key: SUPABASE_URL
         scope: RUN_AND_BUILD_TIME
         value: CHANGEME
+      - key: TRUST_DB_SCHEMA
+        scope: RUN_AND_BUILD_TIME
+        value: dashverge
       - key: SUPABASE_SERVICE_ROLE_KEY
         scope: RUN_AND_BUILD_TIME
         type: SECRET
