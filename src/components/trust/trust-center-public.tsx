@@ -181,30 +181,22 @@ export function TrustCenterPublic({ config, footer }: Props) {
           backgroundImage: "radial-gradient(circle at 82% 20%, #fff 0 2px, transparent 3px), radial-gradient(circle at 92% 62%, #fff 0 2px, transparent 3px), radial-gradient(circle at 70% 80%, #fff 0 2px, transparent 3px)",
           backgroundSize: "120px 120px",
         }} />
-        <div className="relative mx-auto w-full max-w-6xl px-4 pb-28 pt-10 sm:px-6 sm:pb-32">
-          <div className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+        <div className="relative mx-auto w-full max-w-6xl px-4 pb-36 pt-12 sm:px-6 sm:pb-40">
+          <div className="flex items-center gap-2 text-base font-semibold tracking-tight">
             <ShieldCheck className="h-5 w-5" /> {company.name}
           </div>
-          <h1 className="mt-10 max-w-3xl text-4xl font-semibold leading-[1.08] sm:text-6xl">
+          <h1 className="mt-8 max-w-3xl text-4xl font-semibold leading-[1.1] sm:text-5xl">
             {company.name} Trust Center
-            <span className="mt-1 block" style={{ color: "color-mix(in oklch, var(--accent, #7CF5C4) 92%, white)" }}>
-              {tagline}
-            </span>
           </h1>
-          {customers.length > 0 && (
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              {customers.slice(0, 6).map((c) => (
-                <span key={c.name} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-sm font-bold ring-1 ring-white/25 backdrop-blur">
-                  {c.name.slice(0, 2)}
-                </span>
-              ))}
-            </div>
+          {tagline && (
+            <p className="mt-3 max-w-2xl text-lg font-medium text-white/85 sm:text-xl">{tagline}</p>
           )}
         </div>
       </div>
 
       {/* ── Overlapping intro card ───────────────────────────────────── */}
-      <div className="mx-auto -mt-20 w-full max-w-6xl px-4 sm:px-6">
+      {/* relative+z so this positioned card paints ABOVE the positioned banner */}
+      <div className="relative z-10 mx-auto -mt-24 w-full max-w-6xl px-4 sm:px-6">
         <div id="overview" className={cn(card, "scroll-mt-24 p-6 sm:p-8")}>
           {hero.lastUpdate && <p className={cn("text-right text-xs", muted)}>Updated {hero.lastUpdate}</p>}
           <div className={cn("max-w-3xl space-y-3 text-sm leading-relaxed sm:text-base", muted)}>
