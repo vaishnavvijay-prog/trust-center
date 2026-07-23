@@ -22,7 +22,7 @@ change ships to exactly one.**
 
 | Concern | Where it lives | Blast radius |
 | --- | --- | --- |
-| Page content (copy, compliance, documents, FAQs, subprocessors) | YAML in that brand's `trust_configs` row, in its own Postgres schema | One brand |
+| Page content (copy, compliance, documents, FAQs, subprocessors) | YAML in that brand's `trust_configs` row in its own D1 database | One brand |
 | Brand colour, font, name, footer | Env vars on that brand's deploy — [`src/lib/brand.ts`](src/lib/brand.ts) | One brand |
 | Light/dark theme | `theme:` in the YAML | One brand |
 | Layout, components, auth, schema | This repo | All brands |
@@ -31,23 +31,22 @@ Content never rides a deploy. Editing YAML in `/admin` is live immediately.
 
 ## Where the data lives
 
-Supabase caps free accounts at **2 projects per user**, so the brands share one
-project and take a schema each rather than one project apiece:
+Each brand has its own **Cloudflare D1** database (the same Cloudflare account
+the marketing sites use). Isolation is a separate database per brand, not a
+shared one:
 
-| Brand | Supabase project | Schema |
-| --- | --- | --- |
-| Auralis | `auralis-trust-center` | `public` |
-| Zuro | `trust-zuro` | `zuro` |
-| Dashverge | `trust-zuro` | `dashverge` |
-| Astridex | `trust-zuro` | `astridex` |
+| Brand | D1 database |
+| --- | --- |
+| Auralis | `auralis-trust-d1` |
+| Zuro | `zuro-trust-d1` |
+| Dashverge | `dashverge-trust-d1` |
+| Astridex | `astridex-trust-d1` |
 
-`TRUST_DB_SCHEMA` scopes the client in [`src/lib/supabase.ts`](src/lib/supabase.ts),
-so isolation is structural — no query has to remember a per-brand filter. Only
-`service_role` is granted on each schema and RLS is on, so the publishable key
-cannot read another brand's document requests.
-
-Sharing has a bonus: free projects pause after ~7 days idle, and pooling all
-three brands' traffic keeps the one project awake.
+The app runs on DigitalOcean, so it reaches D1 over the **HTTP query API** with
+an API token (see [`src/lib/d1.ts`](src/lib/d1.ts)). Each deploy points at its
+own `CF_D1_ID`. The token **must be scoped to D1:Edit on only the trust
+databases** — an account-wide token would let a compromised deploy reach the
+marketing sites' production D1s. See [`docs/SETUP.md`](docs/SETUP.md).
 
 ## Setup
 

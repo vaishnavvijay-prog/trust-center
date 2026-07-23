@@ -142,6 +142,35 @@ export const trustCenterSchema = z.object({
     )
     .optional(),
   updates: z.array(updateSchema).optional(),
+  // AI security posture — how the AI product handles customer data. Free-form
+  // rows so any label/value pair renders (e.g. Training on customer data: No).
+  aiPosture: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    )
+    .optional(),
+  // Security controls grouped by domain (Product, Data, Network, App, …), each
+  // group a titled list of implemented control names.
+  controls: z
+    .array(
+      z.object({
+        category: z.string(),
+        items: z.array(z.string()).default([]),
+      })
+    )
+    .optional(),
+  // "Trusted by" — customer names, optional logo URL.
+  customers: z
+    .array(
+      z.object({
+        name: z.string(),
+        logo: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 export type TrustCenterConfig = z.infer<typeof trustCenterSchema>;
@@ -264,6 +293,46 @@ subprocessors:
     location: United States of America
     logo: https://upload.wikimedia.org/wikipedia/commons/0/04/OpenAI_Logo.svg
     description: Model inference for trust center assistant features.
+aiPosture:
+  - label: Hosting model
+    value: Cloud, private, or on-prem
+  - label: Human in the loop
+    value: Supported
+  - label: Training on customer data
+    value: No training
+  - label: Data retention
+    value: Contract based
+  - label: Model access
+    value: LLM agnostic
+controls:
+  - category: Product security
+    items:
+      - Audit logging
+      - Single sign-on (SSO)
+      - Role-based access control
+      - Multi-factor authentication
+  - category: Data security
+    items:
+      - Encryption at rest and in transit
+      - Data residency controls
+      - Backups with restore testing
+  - category: Network security
+    items:
+      - Transmission confidentiality
+      - Anomaly detection
+      - Segmented environments
+  - category: Corporate security
+    items:
+      - Security awareness training
+      - Background checks
+      - Vendor risk management
+customers:
+  - name: BFSI
+  - name: Logistics
+  - name: SaaS
+  - name: Healthcare
+  - name: Government
+  - name: Retail
 `;
 
 export type SafeParseResult =

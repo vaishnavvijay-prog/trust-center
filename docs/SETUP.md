@@ -9,43 +9,38 @@ OAuth apps, and billable infrastructure).
 
 ---
 
-## 1. Database
+## 1. Database (Cloudflare D1)
 
-Supabase free accounts allow **2 projects per user** (not per org), so brands
-normally share one project and take a schema each.
+Each brand gets its own D1 database. Create it and its two tables with wrangler
+(or the D1 HTTP API):
 
-**Adding a brand to an existing project (usual case):** run
-[`sql/brand-schema.sql`](../sql/brand-schema.sql) with the schema name changed,
-then add that schema under **Data API -> Settings -> Exposed schemas** *and*
-tick its tables under **Exposed tables**. Missing either step gives
-`PGRST106 the schema must be one of the following` at runtime. Set
-`TRUST_DB_SCHEMA=<brand>` on the deployment.
+```bash
+wrangler d1 create <brand>-trust-d1     # note the returned database uuid
 
-**A brand with its own project:** create the project and run the SQL below in
-the SQL editor. Leave `TRUST_DB_SCHEMA` unset — it defaults to `public`.
-
-```sql
-create table public.document_requests (
-  id text primary key,
-  email text not null,
-  document text not null,
-  company text not null,
-  message text,
-  status text not null default 'pending',
-  created_at timestamptz not null default now()
-);
-
-create table public.trust_configs (
-  id text primary key,
-  yaml text not null,
-  updated_at timestamptz not null default now()
-);
+wrangler d1 execute <brand>-trust-d1 --remote --command \
+  "CREATE TABLE IF NOT EXISTS trust_configs (id TEXT PRIMARY KEY, yaml TEXT NOT NULL, updated_at TEXT NOT NULL);
+   CREATE TABLE IF NOT EXISTS document_requests (id TEXT PRIMARY KEY, email TEXT NOT NULL, document TEXT NOT NULL, company TEXT NOT NULL, message TEXT, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL);"
 ```
 
-Copy the **Project URL** and the **service_role** key (Settings → API).
+D1's SQLite rejects `datetime('now')` as a column default (non-constant), so the
+timestamps are plain `TEXT` and set in application code.
 
-> The service_role key bypasses row-level security. It is server-only — it is
-> never sent to the browser. Never put it in a `NEXT_PUBLIC_*` var.
+Keep the **account id** and the **database uuid** → they become `CF_ACCOUNT_ID`
+and `CF_D1_ID` on the deployment.
+
+### The scoped API token (do this once, reuse for all brands)
+
+The app runs on DigitalOcean, not a Worker, so it talks to D1 over the HTTP
+query API with a token. In the Cloudflare dashboard → **My Profile → API Tokens
+→ Create Token → Custom**:
+
+- Permission: **Account · D1 · Edit**
+- Account Resources: your account
+- (Cloudflare does not scope D1 tokens to a single database, so keep this token
+  ONLY for the trust centers; do not reuse a broad marketing-site token.)
+
+The token value becomes `CF_API_TOKEN` — a **secret** on each deploy. Paste it
+straight into DigitalOcean; never into chat, a file, or a commit.
 
 ## 2. GitHub OAuth app (per brand)
 

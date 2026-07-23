@@ -1,8 +1,7 @@
-import { createServerClient } from "@/lib/supabase";
+import { d1Query, d1Configured } from "@/lib/d1";
 import { DEFAULT_TRUST_YAML } from "@/lib/trust-config";
 
 const CONFIG_ID = "default";
-const TABLE_NAME = "trust_configs";
 
 export type StoredTrustConfig = {
   yaml: string;
@@ -10,45 +9,27 @@ export type StoredTrustConfig = {
 };
 
 export async function getStoredTrustConfig(): Promise<StoredTrustConfig> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .select("yaml, updated_at")
-    .eq("id", CONFIG_ID)
-    .maybeSingle();
-
-  if (error && error.code !== "PGRST116") {
-    console.error("Failed to fetch trust config:", error);
-    throw new Error("Unable to load trust center config.");
-  }
-
+  const rows = await d1Query<{ yaml: string; updated_at: string | null }>(
+    "SELECT yaml, updated_at FROM trust_configs WHERE id = ? LIMIT 1",
+    [CONFIG_ID]
+  );
+  const row = rows[0];
   return {
-    yaml: data?.yaml ?? DEFAULT_TRUST_YAML,
-    updatedAt: data?.updated_at ?? null,
+    yaml: row?.yaml ?? DEFAULT_TRUST_YAML,
+    updatedAt: row?.updated_at ?? null,
   };
 }
 
 export async function saveTrustConfig(yaml: string): Promise<StoredTrustConfig> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .upsert(
-      {
-        id: CONFIG_ID,
-        yaml,
-      },
-      { onConflict: "id" }
-    )
-    .select("yaml, updated_at")
-    .single();
-
-  if (error || !data) {
-    console.error("Failed to persist trust config:", error);
-    throw new Error("Unable to save trust center config.");
-  }
-
-  return {
-    yaml: data.yaml,
-    updatedAt: data.updated_at ?? null,
-  };
+  const updatedAt = new Date().toISOString();
+  // SQLite UPSERT — one config row per deployment, keyed by CONFIG_ID.
+  await d1Query(
+    `INSERT INTO trust_configs (id, yaml, updated_at) VALUES (?, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET yaml = excluded.yaml, updated_at = excluded.updated_at`,
+    [CONFIG_ID, yaml, updatedAt]
+  );
+  return { yaml, updatedAt };
 }
+
+/** Re-exported so callers can branch on configuration without importing d1 directly. */
+export { d1Configured };

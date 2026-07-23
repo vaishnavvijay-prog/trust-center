@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { createServerClient } from "@/lib/supabase";
+import { d1Query } from "@/lib/d1";
 
 export type DocumentRequest = {
   id: string;
@@ -18,37 +18,34 @@ type NewRequestPayload = {
   message?: string;
 };
 
-const TABLE_NAME = "document_requests";
+type Row = {
+  id: string;
+  email: string;
+  document: string;
+  company: string;
+  message: string | null;
+  status: string | null;
+  created_at: string;
+};
 
 export async function listRequests(): Promise<DocumentRequest[]> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Failed to fetch requests from Supabase:", error);
-    throw new Error("Unable to load document requests");
-  }
-
-  return (
-    data?.map((item) => ({
-      id: item.id,
-      email: item.email,
-      document: item.document,
-      company: item.company,
-      message: item.message ?? undefined,
-      status: item.status ?? "pending",
-      createdAt: item.created_at,
-    })) ?? []
+  const rows = await d1Query<Row>(
+    "SELECT id, email, document, company, message, status, created_at FROM document_requests ORDER BY created_at DESC"
   );
+  return rows.map((item) => ({
+    id: item.id,
+    email: item.email,
+    document: item.document,
+    company: item.company,
+    message: item.message ?? undefined,
+    status: (item.status as DocumentRequest["status"]) ?? "pending",
+    createdAt: item.created_at,
+  }));
 }
 
 export async function addRequest(
   payload: NewRequestPayload
 ): Promise<DocumentRequest> {
-  const supabase = createServerClient();
   const newRequest: DocumentRequest = {
     id: nanoid(10),
     email: payload.email,
@@ -59,35 +56,18 @@ export async function addRequest(
     createdAt: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .insert([
-      {
-        id: newRequest.id,
-        email: newRequest.email,
-        document: newRequest.document,
-        company: newRequest.company,
-        message: newRequest.message ?? null,
-        status: newRequest.status,
-        created_at: newRequest.createdAt,
-      },
-    ])
-    .select()
-    .single();
+  await d1Query(
+    "INSERT INTO document_requests (id, email, document, company, message, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [
+      newRequest.id,
+      newRequest.email,
+      newRequest.document,
+      newRequest.company,
+      newRequest.message ?? null,
+      newRequest.status,
+      newRequest.createdAt,
+    ]
+  );
 
-  if (error || !data) {
-    console.error("Failed to persist request in Supabase:", error);
-    throw new Error("Unable to register the document request");
-  }
-
-  return {
-    id: data.id,
-    email: data.email,
-    document: data.document,
-    company: data.company,
-    message: data.message ?? undefined,
-    status: data.status ?? "pending",
-    createdAt: data.created_at,
-  };
+  return newRequest;
 }
-

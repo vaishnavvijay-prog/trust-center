@@ -46,14 +46,14 @@ services:
         scope: RUN_AND_BUILD_TIME
         value: CHANGEME
 
-      # --- content store (shared Supabase project, this brand's schema) ---
-      - key: SUPABASE_URL
+      # --- content store (Cloudflare D1: zuro-trust-d1) ---
+      - key: CF_ACCOUNT_ID
         scope: RUN_AND_BUILD_TIME
-        value: CHANGEME
-      - key: TRUST_DB_SCHEMA
+        value: bf9bd00305d0e4011b60a5539693848c
+      - key: CF_D1_ID
         scope: RUN_AND_BUILD_TIME
-        value: zuro
-      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: 839c0558-dea5-4ed5-a608-0b9a98352048
+      - key: CF_API_TOKEN
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: CHANGEME
