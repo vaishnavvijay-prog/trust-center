@@ -46,14 +46,14 @@ services:
         scope: RUN_AND_BUILD_TIME
         value: CHANGEME
 
-      # --- content store (Cloudflare D1: astridex-trust-d1) ---
-      - key: CF_ACCOUNT_ID
+      # --- content store (shared Supabase project, this brand's schema) ---
+      - key: SUPABASE_URL
         scope: RUN_AND_BUILD_TIME
-        value: bf9bd00305d0e4011b60a5539693848c
-      - key: CF_D1_ID
+        value: CHANGEME
+      - key: TRUST_DB_SCHEMA
         scope: RUN_AND_BUILD_TIME
-        value: 823a0130-b127-4db5-a064-e9f54442e00b
-      - key: CF_API_TOKEN
+        value: astridex
+      - key: SUPABASE_SERVICE_ROLE_KEY
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: CHANGEME
