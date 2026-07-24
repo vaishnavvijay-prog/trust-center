@@ -48,14 +48,9 @@ export default async function Home() {
 
   return (
     <div className={cn(isDark && "dark")}>
-      <main
-        className={cn(
-          "min-h-screen px-4 py-10 transition-colors",
-          isDark
-            ? "bg-slate-950 text-slate-50"
-            : "bg-slate-100/70 text-slate-900"
-        )}
-      >
+      {/* Full-bleed: the trust center owns its own background and edge-to-edge
+          banner, so the wrapper adds no padding, margin, or background. */}
+      <main className={cn("min-h-screen", isDark ? "text-slate-50" : "text-slate-900")}>
         <TrustCenterPublic config={config} footer={getBrand().footer} />
       </main>
     </div>
