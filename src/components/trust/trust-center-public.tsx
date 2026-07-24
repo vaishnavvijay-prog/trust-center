@@ -276,17 +276,26 @@ export function TrustCenterPublic({ config, footer }: Props) {
         </div>
       )}
 
-      {/* ── Sticky nav tabs ──────────────────────────────────────────── */}
-      <div className={cn("sticky top-0 z-20 mt-6 border-b backdrop-blur", isDark ? "border-white/10 bg-slate-950/80" : "border-slate-100 bg-[#f6f7fb]/85")}>
-        <nav className="mx-auto flex w-full max-w-6xl gap-1 overflow-x-auto px-4 sm:px-6" aria-label="Sections">
+      {/* ── Sticky nav tabs (pill style) ─────────────────────────────── */}
+      <div className={cn("sticky top-0 z-20 mt-6 backdrop-blur", isDark ? "bg-slate-950/75" : "bg-[#f6f7fb]/80")}>
+        <nav
+          className="mx-auto flex w-full max-w-6xl items-center gap-1 overflow-x-auto px-4 py-2.5 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="Sections"
+        >
           {nav.map((n) => {
             const on = active === n.id;
             return (
               <a
                 key={n.id}
                 href={`#${n.id}`}
-                className={cn("shrink-0 border-b-2 px-3 py-3 text-sm font-medium transition-colors", on ? "" : "border-transparent " + muted + " hover:text-[color:var(--tc-accent)]")}
-                style={on ? { borderColor: "var(--tc-accent)", color: "var(--tc-accent)" } : undefined}
+                aria-current={on ? "true" : undefined}
+                className={cn(
+                  "shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
+                  on
+                    ? ""
+                    : cn(muted, isDark ? "hover:bg-white/[0.06] hover:text-white" : "hover:bg-slate-200/60 hover:text-slate-900")
+                )}
+                style={on ? { background: "var(--tc-accent-tint)", color: "var(--tc-accent)" } : undefined}
               >
                 {n.label}
               </a>
