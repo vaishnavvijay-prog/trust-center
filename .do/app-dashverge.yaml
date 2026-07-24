@@ -58,19 +58,33 @@ services:
         type: SECRET
         value: CHANGEME
 
-      # --- branding ---
+      # --- branding (Dashverge brand kit: azure accent on deep navy, Open Sans) ---
       - key: BRAND_NAME
         scope: RUN_AND_BUILD_TIME
         value: Dashverge
+      # --azure #2D6CDF — accent for links, eyebrows, focus rings, hero glow
       - key: BRAND_PRIMARY
         scope: RUN_AND_BUILD_TIME
         value: oklch(0.5569 0.1874 261.2)
+      # deep hero/CTA bases: --ink-navy #001E3D -> --navy #003366; glow = --sky #5B9BD5
+      - key: BRAND_INK
+        scope: RUN_AND_BUILD_TIME
+        value: "#001E3D"
+      - key: BRAND_INK_2
+        scope: RUN_AND_BUILD_TIME
+        value: "#003366"
+      - key: BRAND_GLOW
+        scope: RUN_AND_BUILD_TIME
+        value: "#5B9BD5"
       - key: BRAND_FONT
         scope: RUN_AND_BUILD_TIME
         value: Open Sans
+      - key: BRAND_FONT_WEIGHTS
+        scope: RUN_AND_BUILD_TIME
+        value: "300;400;600;700;800"
       - key: BRAND_FOOTER
         scope: RUN_AND_BUILD_TIME
-        value: "© 2026 Zuro"
+        value: "© 2026 Dashverge"
 
 domains:
   - domain: trust.dashverge.com

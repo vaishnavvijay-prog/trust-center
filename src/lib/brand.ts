@@ -21,6 +21,12 @@ export type Brand = {
   fontWeights: string
   /** Footer credit line. */
   footer: string
+  /** Deepest brand base for the hero/CTA gradients (hex/oklch). Empty = keep the built-in Auralis fallback. */
+  ink: string
+  /** Secondary deep base, one step lighter than `ink`. Empty = Auralis fallback. */
+  ink2: string
+  /** Secondary aurora glow accent in the hero. Empty = Auralis fallback. */
+  glow: string
 }
 
 const DEFAULTS: Brand = {
@@ -30,6 +36,9 @@ const DEFAULTS: Brand = {
   font: 'Figtree',
   fontWeights: '300;400;500;600;700;800',
   footer: `© ${new Date().getFullYear()} Zuro`,
+  ink: '',
+  ink2: '',
+  glow: '',
 }
 
 function env(name: string, fallback: string): string {
@@ -45,6 +54,9 @@ export function getBrand(): Brand {
     font: env('BRAND_FONT', DEFAULTS.font),
     fontWeights: env('BRAND_FONT_WEIGHTS', DEFAULTS.fontWeights),
     footer: env('BRAND_FOOTER', DEFAULTS.footer),
+    ink: env('BRAND_INK', DEFAULTS.ink),
+    ink2: env('BRAND_INK_2', DEFAULTS.ink2),
+    glow: env('BRAND_GLOW', DEFAULTS.glow),
   }
 }
 
@@ -60,12 +72,18 @@ export function brandFontHref(brand: Brand): string | null {
  * `.dark` scope so the YAML `theme:` switch keeps the brand colour either way.
  */
 export function brandCss(brand: Brand): string {
-  const tokens = [
+  const parts = [
     `--primary:${brand.primary}`,
     `--primary-foreground:${brand.primaryForeground}`,
     `--ring:${brand.primary}`,
     `--sidebar-primary:${brand.primary}`,
-  ].join(';')
+  ]
+  // Deep gradient bases — only emitted when a brand overrides them, so an
+  // unconfigured deploy falls back to the Auralis hexes baked into the component.
+  if (brand.ink) parts.push(`--tc-ink:${brand.ink}`)
+  if (brand.ink2) parts.push(`--tc-ink2:${brand.ink2}`)
+  if (brand.glow) parts.push(`--tc-glow:${brand.glow}`)
+  const tokens = parts.join(';')
 
   const font = brand.font
     ? `body{font-family:'${brand.font}',ui-sans-serif,system-ui,sans-serif}`

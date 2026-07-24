@@ -181,8 +181,8 @@ export function TrustCenterPublic({ config, footer }: Props) {
         style={{
           background:
             "radial-gradient(120% 130% at 88% -10%, color-mix(in oklch, var(--primary) 62%, white) 0%, transparent 42%)," +
-            "radial-gradient(110% 120% at 8% 115%, color-mix(in oklch, var(--primary) 30%, #00c48d) 0%, transparent 48%)," +
-            "linear-gradient(155deg, color-mix(in oklch, var(--primary) 90%, #0c0326) 0%, color-mix(in oklch, var(--primary) 66%, #170b3f) 55%, color-mix(in oklch, var(--primary) 84%, #0c0326) 100%)",
+            "radial-gradient(110% 120% at 8% 115%, color-mix(in oklch, var(--primary) 30%, var(--tc-glow, #00c48d)) 0%, transparent 48%)," +
+            "linear-gradient(155deg, color-mix(in oklch, var(--primary) 90%, var(--tc-ink, #0c0326)) 0%, color-mix(in oklch, var(--primary) 66%, var(--tc-ink2, #170b3f)) 55%, color-mix(in oklch, var(--primary) 84%, var(--tc-ink, #0c0326)) 100%)",
         }}
       >
         {/* soft top sheen + fine grid for depth (not dotty) */}
@@ -493,7 +493,7 @@ export function TrustCenterPublic({ config, footer }: Props) {
 
         {/* Contact band — full width */}
         {contacts?.email && (
-          <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl px-6 py-6 text-white shadow-md lg:col-span-2" style={{ background: "linear-gradient(120deg, color-mix(in oklch, var(--primary) 78%, #140a2e), var(--tc-accent))" }}>
+          <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl px-6 py-6 text-white shadow-md lg:col-span-2" style={{ background: "linear-gradient(120deg, color-mix(in oklch, var(--primary) 78%, var(--tc-ink, #140a2e)), var(--tc-accent))" }}>
             <div>
               <p className="text-lg font-semibold">Security or procurement questions?</p>
               <p className="text-sm text-white/80">We respond within {contacts.sla}{contacts.officeHours ? ` · ${contacts.officeHours}` : ""}.</p>
