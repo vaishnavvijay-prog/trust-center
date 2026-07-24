@@ -202,9 +202,7 @@ export function TrustCenterPublic({ config, footer }: Props) {
           style={{ background: "color-mix(in oklch, var(--primary) 45%, white)" }}
         />
         <div className="relative mx-auto w-full max-w-6xl px-4 pb-36 pt-12 sm:px-6 sm:pb-40">
-          <div className="flex items-center gap-2 text-base font-semibold tracking-tight">
-            <ShieldCheck className="h-5 w-5" /> {company.name}
-          </div>
+          <BrandMark company={company} />
           <h1 className="mt-8 max-w-3xl text-4xl font-semibold leading-[1.1] sm:text-5xl">
             {company.name} Trust Center
           </h1>
@@ -552,17 +550,39 @@ function Panel({
   );
 }
 
+/** Brand wordmark in the hero: explicit `company.logo`, else a self-hosted
+ *  white logo at /logos/<slug>.svg, else a shield + name. Logos are white so
+ *  they read on the coloured hero. */
+function BrandMark({ company }: { company: { name: string; logo?: string } }) {
+  const [failed, setFailed] = useState(false);
+  const slug = company.name.toLowerCase().trim().split(/\s+/)[0].replace(/[^a-z0-9]/g, "");
+  const src = company.logo || `/logos/${slug}.svg`;
+  if (src && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={src} alt={`${company.name} logo`} className="h-7 w-auto max-h-8 max-w-[190px] object-contain object-left" onError={() => setFailed(true)} />
+    );
+  }
+  return (
+    <div className="flex items-center gap-2 text-base font-semibold tracking-tight">
+      <ShieldCheck className="h-5 w-5" /> {company.name}
+    </div>
+  );
+}
+
 /** Compliance-row badge: official-style logo with a shield/acronym fallback. */
 function CertLogo({ item, isDark }: { item: { name: string; badge?: string }; isDark: boolean }) {
   const [failed, setFailed] = useState(false);
   const logo = item.badge ?? certLogo(item.name);
   if (logo && !failed) {
-    // Real cert badges are landscape lockups (SOC 2 / GDPR / HIPAA) or square
-    // seals (ISO) — size by height and let width follow the mark's aspect.
+    // Uniform white tile behind every badge so the wall reads consistently and
+    // dark marks (ISO black, GDPR navy) stay legible on the dark theme too.
+    // Badges are landscape lockups (SOC 2 / GDPR) or square seals (ISO); a fixed
+    // tile height + min-width keeps them even while width follows each aspect.
     return (
-      <span className="flex h-11 shrink-0 items-center justify-start">
+      <span className="inline-flex h-12 min-w-[96px] shrink-0 items-center justify-center rounded-lg bg-white px-3 shadow-sm ring-1 ring-black/[0.06]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logo} alt={`${item.name} badge`} className="h-11 w-auto max-w-[150px] object-contain object-left" loading="lazy" onError={() => setFailed(true)} />
+        <img src={logo} alt={`${item.name} badge`} className="h-7 w-auto max-w-[128px] object-contain" loading="lazy" onError={() => setFailed(true)} />
       </span>
     );
   }
