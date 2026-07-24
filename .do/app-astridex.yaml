@@ -58,19 +58,33 @@ services:
         type: SECRET
         value: CHANGEME
 
-      # --- branding ---
+      # --- branding (Astridex brand kit: green accent on forest, Open Sans) ---
       - key: BRAND_NAME
         scope: RUN_AND_BUILD_TIME
         value: Astridex
+      # --accent (Astridex Green) #006241 — brand/CTA/links/eyebrows
       - key: BRAND_PRIMARY
         scope: RUN_AND_BUILD_TIME
         value: oklch(0.4384 0.0965 161.7)
+      # deep hero/CTA bases: --forest #04362A -> --emerald #0E875C; glow = --spring #38C786
+      - key: BRAND_INK
+        scope: RUN_AND_BUILD_TIME
+        value: "#04362A"
+      - key: BRAND_INK_2
+        scope: RUN_AND_BUILD_TIME
+        value: "#0E875C"
+      - key: BRAND_GLOW
+        scope: RUN_AND_BUILD_TIME
+        value: "#38C786"
       - key: BRAND_FONT
         scope: RUN_AND_BUILD_TIME
         value: Open Sans
+      - key: BRAND_FONT_WEIGHTS
+        scope: RUN_AND_BUILD_TIME
+        value: "300;400;600;700;800"
       - key: BRAND_FOOTER
         scope: RUN_AND_BUILD_TIME
-        value: "© 2026 Zuro"
+        value: "© 2026 Astridex"
 
 domains:
   - domain: trust.astridex.com
