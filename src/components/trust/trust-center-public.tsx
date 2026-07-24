@@ -560,7 +560,7 @@ function BrandMark({ company }: { company: { name: string; logo?: string } }) {
   if (src && !failed) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={src} alt={`${company.name} logo`} className="h-7 w-auto max-h-8 max-w-[190px] object-contain object-left" onError={() => setFailed(true)} />
+      <img src={src} alt={`${company.name} logo`} className="h-9 w-auto max-h-11 max-w-[230px] object-contain object-left sm:h-10" onError={() => setFailed(true)} />
     );
   }
   return (
@@ -580,9 +580,9 @@ function CertLogo({ item, isDark }: { item: { name: string; badge?: string }; is
     // Badges are landscape lockups (SOC 2 / GDPR) or square seals (ISO); a fixed
     // tile height + min-width keeps them even while width follows each aspect.
     return (
-      <span className="inline-flex h-12 min-w-[96px] shrink-0 items-center justify-center rounded-lg bg-white px-3 shadow-sm ring-1 ring-black/[0.06]">
+      <span className="inline-flex h-14 min-w-[104px] shrink-0 items-center justify-center rounded-lg bg-white px-4 shadow-sm ring-1 ring-black/[0.06]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logo} alt={`${item.name} badge`} className="h-7 w-auto max-w-[128px] object-contain" loading="lazy" onError={() => setFailed(true)} />
+        <img src={logo} alt={`${item.name} badge`} className="h-9 w-auto max-w-[148px] object-contain" loading="lazy" onError={() => setFailed(true)} />
       </span>
     );
   }
