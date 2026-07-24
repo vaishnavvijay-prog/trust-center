@@ -7,7 +7,6 @@ import {
   Bot,
   Briefcase,
   Check,
-  ChevronRight,
   Clock,
   Database,
   Download,
@@ -518,14 +517,13 @@ function brandVars(): React.CSSProperties {
   } as React.CSSProperties;
 }
 
-/** A titled content panel with a "Details" affordance, matching the reference. */
+/** A titled content panel. */
 function Panel({
   id,
   title,
   icon: Icon,
   card,
   heading,
-  muted,
   full,
   children,
 }: {
@@ -540,14 +538,9 @@ function Panel({
 }) {
   return (
     <section id={id} className={cn(card, "scroll-mt-20 p-6", full && "lg:col-span-2")}>
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="h-4 w-4" style={{ color: "var(--tc-accent)" }} />}
-          <h2 className={cn("text-lg font-semibold", heading)}>{title}</h2>
-        </div>
-        <span className={cn("inline-flex items-center gap-0.5 text-xs font-medium", muted)}>
-          Details <ChevronRight className="h-3.5 w-3.5" />
-        </span>
+      <div className="mb-4 flex items-center gap-2">
+        {Icon && <Icon className="h-4 w-4" style={{ color: "var(--tc-accent)" }} />}
+        <h2 className={cn("text-lg font-semibold", heading)}>{title}</h2>
       </div>
       {children}
     </section>
