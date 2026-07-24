@@ -171,21 +171,38 @@ export function TrustCenterPublic({ config, footer }: Props) {
   );
   const heading = isDark ? "text-white" : "text-slate-900";
   const muted = isDark ? "text-slate-300/80" : "text-slate-500";
-  const pageBg = isDark ? "bg-slate-950" : "bg-[#f4f5f8]";
+  const pageBg = isDark ? "bg-slate-950" : "bg-[#f6f7fb]";
   const tagline = company.tagline || "Security and privacy you can verify";
 
   return (
     <div className={cn("tc-root relative", isDark && "dark", pageBg)} style={brandVars()}>
-      {/* ── Hero banner (full-width brand gradient) ──────────────────── */}
+      {/* ── Hero banner (layered brand aurora) ───────────────────────── */}
       <div
         className="relative overflow-hidden text-white"
-        style={{ background: "linear-gradient(120deg, color-mix(in oklch, var(--primary) 78%, #140a2e), var(--tc-accent))" }}
+        style={{
+          background:
+            "radial-gradient(120% 130% at 88% -10%, color-mix(in oklch, var(--primary) 62%, white) 0%, transparent 42%)," +
+            "radial-gradient(110% 120% at 8% 115%, color-mix(in oklch, var(--primary) 30%, #00c48d) 0%, transparent 48%)," +
+            "linear-gradient(155deg, color-mix(in oklch, var(--primary) 90%, #0c0326) 0%, color-mix(in oklch, var(--primary) 66%, #170b3f) 55%, color-mix(in oklch, var(--primary) 84%, #0c0326) 100%)",
+        }}
       >
-        {/* decorative rings */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.14]" style={{
-          backgroundImage: "radial-gradient(circle at 82% 20%, #fff 0 2px, transparent 3px), radial-gradient(circle at 92% 62%, #fff 0 2px, transparent 3px), radial-gradient(circle at 70% 80%, #fff 0 2px, transparent 3px)",
-          backgroundSize: "120px 120px",
-        }} />
+        {/* soft top sheen + fine grid for depth (not dotty) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage: "radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 75%)",
+            WebkitMaskImage: "radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 75%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl"
+          style={{ background: "color-mix(in oklch, var(--primary) 45%, white)" }}
+        />
         <div className="relative mx-auto w-full max-w-6xl px-4 pb-36 pt-12 sm:px-6 sm:pb-40">
           <div className="flex items-center gap-2 text-base font-semibold tracking-tight">
             <ShieldCheck className="h-5 w-5" /> {company.name}
@@ -260,7 +277,7 @@ export function TrustCenterPublic({ config, footer }: Props) {
       )}
 
       {/* ── Sticky nav tabs ──────────────────────────────────────────── */}
-      <div className={cn("sticky top-0 z-20 mt-6 border-b backdrop-blur", isDark ? "border-white/10 bg-slate-950/80" : "border-slate-100 bg-[#f4f5f8]/85")}>
+      <div className={cn("sticky top-0 z-20 mt-6 border-b backdrop-blur", isDark ? "border-white/10 bg-slate-950/80" : "border-slate-100 bg-[#f6f7fb]/85")}>
         <nav className="mx-auto flex w-full max-w-6xl gap-1 overflow-x-auto px-4 sm:px-6" aria-label="Sections">
           {nav.map((n) => {
             const on = active === n.id;
