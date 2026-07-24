@@ -44,16 +44,16 @@ type Props = {
 /** Self-hosted official-style badge for a certification, matched by name. */
 const CERT_LOGO: [RegExp, string][] = [
   [/soc\s?3/i, "/badges/soc3.svg"],
-  [/soc\s?2/i, "/badges/soc2.svg"],
+  [/soc\s?2/i, "/badges/soc2.png"],
   [/soc\s?1/i, "/badges/soc1.svg"],
-  [/27001/i, "/badges/iso-27001.svg"],
+  [/27001/i, "/badges/iso-27001.png"],
   [/27701/i, "/badges/iso-27701.svg"],
   [/42001/i, "/badges/iso-42001.svg"],
   [/9001/i, "/badges/iso-9001.svg"],
-  [/gdpr/i, "/badges/gdpr.svg"],
+  [/gdpr/i, "/badges/gdpr.png"],
   [/ccpa/i, "/badges/ccpa.svg"],
   [/lgpd/i, "/badges/lgpd.svg"],
-  [/hipaa/i, "/badges/hipaa.svg"],
+  [/hipaa/i, "/badges/hipaa.png"],
   [/hitrust/i, "/badges/hitrust.svg"],
   [/pci|dss/i, "/badges/pci-dss.svg"],
   [/cmmc/i, "/badges/cmmc.svg"],
@@ -309,15 +309,21 @@ export function TrustCenterPublic({ config, footer }: Props) {
         {compliance.length > 0 && (
           <Panel id="compliances" title="Compliances" card={card} heading={heading} muted={muted}>
             <ul className={cn("divide-y", isDark ? "divide-white/10" : "divide-slate-100")}>
-              {compliance.map((item) => (
-                <li key={`${item.name}-${item.status}`} className="flex items-center gap-3 py-3">
-                  <CertLogo item={item} isDark={isDark} />
-                  <span className={cn("text-sm font-semibold", heading)}>{item.name}</span>
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                    <Check className="h-3 w-3" strokeWidth={3} /> {item.status}
-                  </span>
-                </li>
-              ))}
+              {compliance.map((item) => {
+                // Real badge lockups (.png) embed the cert name — don't repeat it
+                // as text. Icon-only discs (.svg) and acronym fallbacks keep the label.
+                const resolved = item.badge ?? certLogo(item.name);
+                const isLockup = Boolean(resolved && /\.(png|jpe?g|webp)$/i.test(resolved));
+                return (
+                  <li key={`${item.name}-${item.status}`} className="flex items-center gap-3 py-3">
+                    <CertLogo item={item} isDark={isDark} />
+                    {!isLockup && <span className={cn("text-sm font-semibold", heading)}>{item.name}</span>}
+                    <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                      <Check className="h-3 w-3" strokeWidth={3} /> {item.status}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </Panel>
         )}
@@ -552,10 +558,12 @@ function CertLogo({ item, isDark }: { item: { name: string; badge?: string }; is
   const [failed, setFailed] = useState(false);
   const logo = item.badge ?? certLogo(item.name);
   if (logo && !failed) {
+    // Real cert badges are landscape lockups (SOC 2 / GDPR / HIPAA) or square
+    // seals (ISO) — size by height and let width follow the mark's aspect.
     return (
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center">
+      <span className="flex h-11 shrink-0 items-center justify-start">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logo} alt={`${item.name} badge`} className="h-10 w-10 object-contain" loading="lazy" onError={() => setFailed(true)} />
+        <img src={logo} alt={`${item.name} badge`} className="h-11 w-auto max-w-[150px] object-contain object-left" loading="lazy" onError={() => setFailed(true)} />
       </span>
     );
   }
