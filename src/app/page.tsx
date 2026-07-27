@@ -34,11 +34,19 @@ async function loadTrustConfig() {
   return fallbackParsed.data;
 }
 
+/** Per-brand favicon at /favicons/<slug>.<ext>, matching the hero logo slug. */
+function faviconFor(name: string): { url: string; type: string } {
+  const slug = name.toLowerCase().trim().split(/\s+/)[0].replace(/[^a-z0-9]/g, "");
+  const ext = slug === "auralis" ? "png" : "svg";
+  return { url: `/favicons/${slug}.${ext}`, type: ext === "svg" ? "image/svg+xml" : "image/png" };
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const config = await loadTrustConfig();
   return {
     title: `${config.company.name} | Trust Center`,
     description: config.company.description,
+    icons: { icon: [faviconFor(config.company.name)] },
   };
 }
 
