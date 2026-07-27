@@ -164,25 +164,32 @@ export function TrustCenterPublic({ config, footer }: Props) {
   const card = cn(
     "rounded-2xl",
     isDark
-      ? "bg-white/[0.05] backdrop-blur ring-1 ring-white/10"
+      ? "bg-slate-900/85 backdrop-blur-xl ring-1 ring-white/10 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.7)]"
       : "bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04),0_18px_36px_-20px_rgba(16,24,40,0.14)]"
   );
   const heading = isDark ? "text-white" : "text-slate-900";
-  const muted = isDark ? "text-slate-300/80" : "text-slate-500";
+  const muted = isDark ? "text-slate-300" : "text-slate-500";
   const pageBg = isDark ? "bg-slate-950" : "bg-[#f6f7fb]";
   const tagline = company.tagline || "Security and privacy you can verify";
+
+  // Hero background. Light brands use a primary-dominant aurora. Dark brands
+  // (Zuro) keep the background NAVY (var(--tc-ink)) with violet only as an
+  // accent — a violet wash would swallow the white logo/text and wash out the
+  // overlapping card, which is exactly what the brand kit warns against.
+  const heroBg = isDark
+    ? "radial-gradient(120% 130% at 88% -10%, color-mix(in oklch, var(--primary) 40%, var(--tc-ink, #0b101c)) 0%, transparent 50%)," +
+      "radial-gradient(120% 120% at 4% 118%, color-mix(in oklch, var(--tc-glow, #a057ff) 45%, var(--tc-ink, #0b101c)) 0%, transparent 55%)," +
+      "linear-gradient(162deg, color-mix(in oklch, var(--primary) 26%, var(--tc-ink, #0b101c)) 0%, color-mix(in oklch, var(--primary) 38%, var(--tc-ink2, #1a1033)) 45%, var(--tc-ink, #0b101c) 100%)"
+    : "radial-gradient(120% 130% at 88% -10%, color-mix(in oklch, var(--primary) 62%, white) 0%, transparent 42%)," +
+      "radial-gradient(110% 120% at 8% 115%, color-mix(in oklch, var(--primary) 30%, var(--tc-glow, #00c48d)) 0%, transparent 48%)," +
+      "linear-gradient(155deg, color-mix(in oklch, var(--primary) 90%, var(--tc-ink, #0c0326)) 0%, color-mix(in oklch, var(--primary) 66%, var(--tc-ink2, #170b3f)) 55%, color-mix(in oklch, var(--primary) 84%, var(--tc-ink, #0c0326)) 100%)";
 
   return (
     <div className={cn("tc-root relative", isDark && "dark", pageBg)} style={brandVars()}>
       {/* ── Hero banner (layered brand aurora) ───────────────────────── */}
       <div
         className="relative overflow-hidden text-white"
-        style={{
-          background:
-            "radial-gradient(120% 130% at 88% -10%, color-mix(in oklch, var(--primary) 62%, white) 0%, transparent 42%)," +
-            "radial-gradient(110% 120% at 8% 115%, color-mix(in oklch, var(--primary) 30%, var(--tc-glow, #00c48d)) 0%, transparent 48%)," +
-            "linear-gradient(155deg, color-mix(in oklch, var(--primary) 90%, var(--tc-ink, #0c0326)) 0%, color-mix(in oklch, var(--primary) 66%, var(--tc-ink2, #170b3f)) 55%, color-mix(in oklch, var(--primary) 84%, var(--tc-ink, #0c0326)) 100%)",
-        }}
+        style={{ background: heroBg }}
       >
         {/* soft top sheen + fine grid for depth (not dotty) */}
         <div
@@ -199,7 +206,7 @@ export function TrustCenterPublic({ config, footer }: Props) {
         <div
           aria-hidden
           className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl"
-          style={{ background: "color-mix(in oklch, var(--primary) 45%, white)" }}
+          style={{ background: isDark ? "color-mix(in oklch, var(--primary) 60%, var(--tc-ink, #0b101c))" : "color-mix(in oklch, var(--primary) 45%, white)" }}
         />
         <div className="relative mx-auto w-full max-w-6xl px-4 pb-36 pt-12 sm:px-6 sm:pb-40">
           <BrandMark company={company} />
